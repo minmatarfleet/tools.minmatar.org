@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block title %}Contract Settings{% endblock %}
+
+{% block content %}
+{% if error %}
+{{error}}
+{% else %}
+<div class="row">
+    <div class="col-md-6 pb-2 d-flex">
+        <div class="card flex-fill">
+            <div class="card-body">
+                <h5 class="card-title">Contract Responsibilities</h5>
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Contract</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Size</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in responsibilities %}
+                        <tr>
+                            <td>{{ row.title }}</td>
+                            <td>{{ row.quantity}}</td>
+                            <td>{{ row.get_size_display }}</td>
+                            <td>
+                                <a href="{% url 'delete-contract-entity-reponsibility' entity.entity_id row.pk %}">Remove</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <hr>
+                {% crispy responsibility_form %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 pb-2 d-flex">
+        <div class="card flex-fill">
+            <div class="card-body">
+                <h5 class="card-title">Entity Managers</h5>
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Character ID</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for manager in managers %}
+                        <tr>
+                            <td>{{ manager.character_id }}</td>
+                            <td>
+                                <a href="https://zkillboard.com/character/{{ manager.character_id }}/">zKillboard</a>
+                                <a href="{% url 'delete-contract-entity-manager' manager.pk %}">Remove</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <hr>
+                {% crispy manager_form %}
+                <p>
+                    <a href="{% url 'delete-contract-entity' entity.entity_id %}">Delete entity</a>
+                    <a href="{% url 'contract-entity-refresh' entity.entity_id %}">Refresh token</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

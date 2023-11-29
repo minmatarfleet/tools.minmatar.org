@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block title %}Freight Calculator{% endblock %}
+
+{% block content %}
+{{error}}
+<a href="{% url 'public-contract-list' %}">Back to Contracts</a>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Fleets{% endblock %}
+
+{% block content %}
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="{% url 'list_fleet' %}">Fleets</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'list_fleet_history' %}">Fleet History</a>
+    </li>
+</ul>
+<br>
+<div class="container-fluid">
+    <a class="btn btn-success" href="{% url 'create_fleet' %}">Create Fleet</a>
+</div>
+<br>
+<div class="row mb-3">
+    <div class="col-sm-12">
+        <div class="card"> 
+            <div class="card-header bg-primary text-white">
+                Upcoming Fleets
+            </div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Fleet Commander</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Audience</th>
+                            <th scope="col">EVE Time</th>
+                            <th scope="col">Local Time</th>
+                            <th scope="col">Countdown</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fleet in fleets %}
+                            <tr onclick="window.location='{% url 'fleet_detail' fleet.pk %}'">
+                                <td>
+                                    <img src="https://images.evetech.net/characters/{{fleet.fleet_commander_id}}/portrait?size=32" alt="BearThatCares" width="32" height="32" class="img-thumbnail rounded-circle">
+                                    {{fleet.fleet_commander_name}}
+                                </td>
+                                <td>
+                                    {% if fleet.type == 'frontline' %} 
+                                    <span class="badge bg-primary">Frontline</span>
+                                    {% elif fleet.type == 'structure' %} 
+                                    <span class="badge bg-danger">Structure</span>
+                                    {% elif fleet.type == 'roam' %} 
+                                    <span class="badge bg-success">Roam</span>
+                                    {% elif fleet.type == 'stratop' %} 
+                                    <span class="badge bg-danger">Strategic Operation</span>
+                                    {% elif fleet.type == 'training' %} 
+                                    <span class="badge bg-info text-dark">Training</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if fleet.audience == 'militia' %}
+                                    <span class="badge bg-secondary">Militia</span>
+                                    {% elif fleet.audience == 'alliance' %} 
+                                    <span class="badge bg-primary">Alliance</span>
+                                    {% elif fleet.audience == 'academy' %}
+                                    <span class="badge bg-success">Academy</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{fleet.start_time|date:"Y-m-d G:i"}}</td>
+                                <td class="localdate">
+                                    <p class hidden>{{fleet.start_time|date:"U"}}</p>
+                                    <p class>N/A</p>
+                                </td>
+                                {% if fleet.awaiting_ping %}
+                                <td>
+                                    <span class="badge bg-danger">Awaiting Ping</span>
+                                </td>
+                                {% elif fleet.active %}
+                                <td>
+                                    <span class="badge bg-success">Forming</span>
+                                </td>
+                                {% else %}
+                                <td class="countdown">
+                                    <p class="date" hidden>{{fleet.start_time.isoformat}}</p>
+                                    <p class="counter"><i class="fa fa-spinner fa-spin"></i></p>
+                                </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+<script>
+var datesToConvert = document.getElementsByClassName('localdate')
+for (i=0; i<datesToConvert.length; i++) {
+    var element = datesToConvert[i].getElementsByTagName('*')
+    time = element[0]
+    // init date in UTC timezone
+    var date = new Date(time.innerText * 1000)
+    element[1].innerHTML = date.toLocaleString()
+} 
+</script>
+
+<script>
+setInterval(function () {
+    var countdowns = document.getElementsByClassName('countdown')
+    for (i = 0; i < countdowns.length; i++) {
+        // pull date
+        var elements = countdowns[i].getElementsByTagName('*')
+        var date = new Date(elements[0].innerText)
+        var now = new Date().getTime()
+        var distance = date - now
+        // calculate times
+        sign = Math.sign(distance)
+        distance = Math.abs(distance)
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        // display result
+        elements[1].innerHTML = (sign < 0 ? "-" : "") + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+    }
+}, 1000);
+</script>
+{% endblock %}

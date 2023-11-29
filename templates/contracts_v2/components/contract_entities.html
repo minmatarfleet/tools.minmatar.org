@@ -1,0 +1,32 @@
+<div class="card flex-fill">
+    <div class="card-header bg-secondary text-white">Contract Entities</div>
+    <div class="card-body">
+        <table class="table datatable">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Contact</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entity in entities %}
+                <tr>
+                    <td>
+                        {% if not entity.has_token %}
+                        <i class="bi-exclamation-circle-fill text-danger" title="Missing valid token"></i> 
+                        {% endif %}
+                        {{ entity.entity_name }}
+                    </td>
+                    <td>{{ entity.contact_discord_name }}</td>
+                    <td>{{ entity.type}}</td>
+                    <td>
+                        <a href="{% url 'contract-entity-settings' entity.entity_id %}">Settings</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

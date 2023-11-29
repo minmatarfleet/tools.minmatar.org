@@ -1,0 +1,18 @@
+{% extends "./_sales.html" %}
+{% load humanize %}
+
+{% block top_card %}
+<p class="card-text">Estimated item sales for the past 30 days and for each of the last four weeks, based on the items in the current fits.</p>
+{% endblock %}
+
+{% block table_body %}
+{% for item, row in sales %}
+<tr>
+    <td>{{ item }}</td>
+    <td class="dt-body-right">{{ row.total|intcomma }}</td>
+    {% for week in row.weeks %}
+    <td class="dt-body-right">{{ week|intcomma }}</td>
+    {% endfor %}
+</tr>
+{% endfor %}
+{% endblock %}

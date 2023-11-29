@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Doctrines{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">Doctrines</li>
+    </ol>
+</nav>
+<div class="row mb-3">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">Alliance Doctrines</div>
+            <div class="card-body">
+                <p>Doctrines that are flown in Minmatar Fleet Alliance fleets and are available on alliance contracts.</p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-md-2" scope="col">Doctrine Name</th>
+                            <th class="col-md-4" scope="col">Tag</th>
+                            <th class="col-md-4" scope="col">Fittings</th>
+                            <th class="col-md-2" scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for doctrine in primary_doctrines %}
+                        <tr>
+                            <td>{{ doctrine.name }}</td>
+                            <td>
+                                {% for tag in doctrine.tags.all %}
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{tag.description}}" style="background-color: {{tag.color}}; color: {{tag.text_color}};" class="badge">{{ tag.name }}</span>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% for fitting in doctrine.fittings.all %}
+                                <img src="{{ fitting.image }}" width="32" height="32" alt="{{ fitting.name }}" title="{{ fitting.name }}">
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <a href="{% url 'doctrine_detail' doctrine.slug %}" class="btn btn-primary">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">Militia Doctrines</div>
+            <div class="card-body">
+                <p>Doctrines that are flown in militia by Minmatar Fleet Alliance fleet commanders and are available on public contracts.</p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-md-2" scope="col">Name</th>
+                            <th class="col-md-4" scope="col">Tag</th>
+                            <th class="col-md-4" scope="col">Fittings</th>
+                            <th class="col-md-2" scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for doctrine in secondary_doctrines %}
+                        <tr>
+                            <td>{{ doctrine.name }}</td>
+                            <td>
+                                {% for tag in doctrine.tags.all %}
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{tag.description}}" style="background-color: {{tag.color}}; color: {{tag.text_color}};" class="badge">{{ tag.name }}</span>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% for fitting in doctrine.fittings.all %}
+                                <img src="{{ fitting.image }}" width="32" height="32" alt="{{ fitting.name }}" title="{{ fitting.name }}">
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <a href="{% url 'doctrine_detail' doctrine.slug %}" class="btn btn-primary">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+{% endblock %}

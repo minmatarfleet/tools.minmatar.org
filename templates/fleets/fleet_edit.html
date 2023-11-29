@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block title %}Edit Fleet{% endblock %}
+
+{% block content %}
+{{ form.media }}
+<br>
+<div class="row">
+    <div class="col-md-12 pb-2 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header bg-warning text-white">Edit Fleet</div>
+            <div class="card-body">
+                {% crispy form %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

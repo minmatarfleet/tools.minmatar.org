@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}All Fittings' Items{% endblock %}
+
+{% block content %}
+<div class="row">
+    <h3 class="col-sm-12">All Fittings' Items</h3>
+    {% for section, section_items in items.items %}
+    <div class="col-md-6 col-xl-3 pb-2">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ section|capfirst }}</h5>
+                <ul>
+                    {% for item in section_items %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% load humanize %}
+
+<div class="card flex-fill">
+    <div class="card-header bg-primary text-white">Contract Summary</div>
+    <div class="card-body">
+        <table class="table datatable">
+            <thead>
+                <tr>
+                    <th scope="col">Contract</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Entities</th>
+                    <th scope="col">Actual / Expected</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in contract_summary.rows %}
+                <tr>
+                    <td><a href="{% url 'fitting_detail' row.fitting.slug %}">{{ row.contract_title }}</a></td>
+                    <td>{{ row.location }}</td>
+                    <td>{{ row.entities }}</td>
+                    <td>
+                        {% if row.warning_level == 2 %}
+                        <i class="bi-x-circle-fill text-danger"></i>
+                        {% elif row.warning_level == 1 %}
+                        <i class="bi-exclamation-circle-fill text-warning"></i>
+                        {% elif row.warning_level == 0 %}
+                        <i class="bi-check-circle-fill text-success"></i>
+                        {% endif %}
+                        {{ row.current_quantity }} / {{ row.expected_quantity}}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

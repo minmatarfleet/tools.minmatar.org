@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}{{fitting.name}}{% endblock %}
+
+{% block content %}
+
+{% if doctrine %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'list_doctrines' %}">Doctrines</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'doctrine_detail' doctrine.slug %}">{{doctrine.name}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{fitting.name}}</li>
+    </ol>
+</nav>
+{% else %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'list_fittings' %}">Fittings</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{fitting.name}}</li>
+    </ol>
+</nav>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-6 mb-3 text-center">
+        <script src="https://unpkg.com/minmatar-shipfit@1.2.0/dist/index.umd.min.js" async></script>
+        <ship-fit hide-copy class="d-none" remove-class="d-none">
+            {{fitting.eft_format}}
+        </ship-fit>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card mb-2">
+            <div class="card-body">
+                <h5 class="card-title">{{fitting.name}}</h5>
+                <p>{{fitting.description}}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title d-flex justify-content-between">
+                    <h5 class="d-inline">EFT Format</h5>
+                    <button type="button" class="btn btn-sm btn-secondary"
+                        onclick="navigator.clipboard.writeText(document.getElementById('eft-format').value);let t=bootstrap.Popover.getOrCreateInstance(this);setTimeout(() => t.hide(), 2000);t.show()" 
+                        data-bs-content="Fit copied to clipboard" 
+                        data-bs-placement="bottom">Copy to clipboard</button>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" rows="25" id="eft-format" onclick="this.focus();this.select()" readonly>{{fitting.eft_format}}</textarea>
+                </div>
+            </div>
+            <div class="card-footer">
+                <small class="float-right text-muted"><a href="{% url 'fitting_multibuy' fitting.slug %}">Multibuy</a></small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

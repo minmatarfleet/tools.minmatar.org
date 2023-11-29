@@ -1,0 +1,4 @@
+{% load humanize %}
+<div class="alert alert-info" role="alert">
+    Outstanding contracts: {{ courier_statistics.total_contracts }}, total volume: {{ courier_statistics.total_volume|floatformat:0|intcomma }}, total collateral: {{ courier_statistics.total_collateral|floatformat:0|intcomma }}, total reward: {{ courier_statistics.total_reward|floatformat:0|intcomma }}
+</div>

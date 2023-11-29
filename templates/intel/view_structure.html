@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}View Structure{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'list-structures' %}">Structure Intel</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{structure.structure_name}}</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">Structure Information</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <p>System</p>
+                    </div>
+                    <div class="col">
+                        <p class="card-text">
+                            {{structure.system}}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Constellation</p>
+                    </div>
+                    <div class="col">
+                        <p class="card-text">
+                            {{structure.constellation}}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Region</p>
+                    </div>
+                    <div class="col">
+                        <p class="card-text">
+                            {{structure.region}}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Corporation</p>
+                    </div>
+                    <div class="col">
+                        <p class="card-text">
+                            <img src="https://images.evetech.net/corporations/{{structure.corporation_id}}/logo?size=32" class="rounded-circle me-1" alt="...">
+                            {{structure.corporation_name}}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Alliance</p>
+                    </div>
+                    <div class="col">
+                        <p class="card-text">
+                            <img src="https://images.evetech.net/alliances/{{structure.alliance_id}}/logo?size=32" class="rounded-circle me-1" alt="...">
+                            {{structure.alliance_name}}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Related Alliance</p>
+                    </div>
+                    <div class="col">
+                        <p class="card-text">
+                            <img src="https://images.evetech.net/alliances/{{structure.related_alliance_id}}/logo?size=32" class="rounded-circle me-1" alt="...">
+                            {{structure.related_alliance_name}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header">Fitting</div>
+            <div class="card-body">
+                <div class="form-group">
+                    <textarea class="form-control" rows="25" id="eft-format" onclick="this.focus();this.select()" readonly>{{structure.fitting}}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

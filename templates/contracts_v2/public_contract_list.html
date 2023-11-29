@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Public Contracts V2{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <a class="btn btn-secondary" href="{% url 'create-contract-corporation-entity' %}">Add Corporation</a>
+    <a class="btn btn-secondary" href="{% url 'create-contract-character-entity' %}">Add Character</a>
+    <span class="ms-2">Sales:</span>
+    <a href="{% url 'contract-sales-fittings' %}">Fittings</a> - 
+    <a href="{% url 'contract-sales-ships' %}">Ships</a> - 
+    <a href="{% url 'contract-sales-items' %}">Items</a>
+</div>
+<br>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="{% url 'public-contract-list' %}">Public Seeding</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'public-doctrine-contract-list' %}">Public Doctrine Seeding</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'alliance-doctrine-contract-list' %}">Alliance Doctrine Seeding</a>
+    </li>
+</ul>
+<div class="row">
+    <div class="col-sm-12">
+        {% include "contracts_v2/components/contract_summary.html" %}
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-sm-6 d-flex">
+        {% include "contracts_v2/components/contract_entities.html" %}
+    </div>
+    <div class="col-sm-6 d-flex">
+        {% include "contracts_v2/components/contract_historical_summary.html" %}
+    </div>
+</div>
+{% endblock %}

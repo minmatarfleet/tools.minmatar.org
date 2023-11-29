@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Leaderboard{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Leaderboard</h5>
+          <table class="table datatable">
+            <thead>
+              <tr>
+                <th scope="col">Character Name</th>
+                <th scope="col">Clicks</th>
+                <th scope="col">Estimated Payout</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for resource in resource_stats %}
+              <tr>
+                <td>{{ resource.name }}</td>
+                <td>{{ resource.clicks }}</td>
+                <td>{{ resource.payout |intcomma }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">10 or more clicks required to be eligible for payout</small>
+        </div>
+      </div>
+    </div>
+</div>
+
+{% endblock %}

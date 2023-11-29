@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Structure Intel{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <a class="btn btn-success" href="{% url 'create-structure' %}">Add Structure Intel</a>
+    <a class="btn btn-secondary" href="https://minmatar.org/academy/structure-intel/">How to Scan Structures</a>
+</div>
+<br>
+{% if campaigns %}
+<div class="alert alert-primary" role="alert">
+    There are active structure campaigns. Earn ISK! <a href="{% url 'list-structure-campaigns' %}">Click to view.</a>
+</div>
+{% endif %}
+<br>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Structures</h5>
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Timer</th>
+                            <th scope="col">Structure Name</th>
+                            <th scope="col">System</th>
+                            <th scope="col">Region</th>
+                            <th scope="col">Owner</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for structure in structures %}
+                        <tr>
+                            <td>{{structure.timer}}</td>
+                            <td>
+                                <div>
+                                    <img src="https://images.evetech.net/types/{{ structure.structure_type_id }}/icon?size=32" class="rounded-circle me-1" alt="...">
+                                    {{structure.structure_name}}
+                                </div>
+                            </td>
+                            <td>{{structure.system}}</td>
+                            <td>{{structure.region}}</td>
+                            <td>
+                                {% if structure.related_alliance_name %}
+                                <img src="https://images.evetech.net/alliances/{{ structure.related_alliance_id }}/logo?size=32" class="rounded-circle me-1" alt="...">
+                                {{ structure.related_alliance_name }}
+                                {% elif structure.alliance_name %}
+                                <img src="https://images.evetech.net/alliances/{{ structure.alliance_id }}/logo?size=32" class="rounded-circle me-1" alt="...">
+                                {{ structure.alliance_name }}
+                                {% else %}
+                                <img src="https://images.evetech.net/corporations/{{ structure.corporation_id }}/logo?size=32" class="rounded-circle me-1" alt="...">
+                                {{ structure.corporation_name }}
+                                {% endif %}
+                                
+                            </td>
+                            <td>
+                                <a href="{% url 'view-structure' structure.id %}" class="btn btn-primary">View</a>
+                                <a href="{% url 'delete-structure' structure.id %}" class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

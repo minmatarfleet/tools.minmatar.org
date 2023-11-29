@@ -1,0 +1,15 @@
+# Rename this file to settings.py and insert relevant secrets
+from tools.settings_common import *
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+SECRET_KEY = "secret"
+
+# Discord
+DISCORD_BOT_TOKEN = ""
+
+# ESI 
+ESI_SSO_CLIENT_ID = ""
+ESI_SSO_CLIENT_SECRET = ""
+ESI_SSO_CALLBACK_URL = "http://localhost:8000/sso/callback"

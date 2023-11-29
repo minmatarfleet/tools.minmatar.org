@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Referral Program{% endblock %}
+
+{% block content %}
+
+{% if request.user.is_anonymous %}
+Please log in at the top right to receive your links.
+{% else %}
+<div class="row mb-3">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Your Links</h5>
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Resource</th>
+                            <th scope="col">Link</th>
+                            <th scope="col">Recommended Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for resource in resources %}
+                        <tr>
+                            <td>{{ resource.name }}</td>
+                            <td>{{ request.get_host }}/referrals/{{request.user.eve_character.character_id}}/{{resource.name}}/{{resource.pk}}
+                            </td>
+                            <td>{{ resource.slogan }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Your Stats</h5>
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Resource</th>
+                            <th scope="col">Clicks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for resource in resource_stats %}
+                        <tr>
+                            <td>{{ resource.name }}</td>
+                            <td>{{ resource.clicks }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

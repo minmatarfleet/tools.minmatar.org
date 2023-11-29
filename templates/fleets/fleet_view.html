@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block title %}View Fleet{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'list_fleet' %}">Fleets</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Fleet {{fleet.pk}}</li>
+    </ol>
+</nav>
+{% if is_fleet_commander %}
+<div class="container-fluid">
+    <a class="btn btn-warning" href="{% url 'edit_fleet' fleet.pk %}">Edit Fleet</a>
+    <a class="btn btn-danger" href="{% url 'delete_fleet' fleet.pk %}">Delete Fleet</a>
+    {% if fleet.invalid_for_preping_reason %}
+    <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{fleet.invalid_for_preping_reason}}">
+        <button class="btn btn-secondary" style="pointer-events: none;" type="button" disabled>Preping Fleet</button>
+    </span>
+    {% else %}
+    <a class="btn btn-secondary" href="{% url 'preping_fleet' fleet.pk %}">Preping Fleet</a>
+    {% endif %}
+    {% if fleet.invalid_for_ping_reason %}
+    <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{fleet.invalid_for_ping_reason}}">
+        <button class="btn btn-secondary" style="pointer-events: none;" type="button" disabled>Ping Fleet</button>
+    </span>
+    {% else %}
+    <a class="btn btn-secondary" href="{% url 'ping_fleet' fleet.pk %}">Ping Fleet</a>
+    {% endif %}
+    {% if not fleet.tracked %}
+    <a class="btn btn-success float-end" href="{% url 'create_esi_fleet' fleet.pk %}">Start Fleet Tracking</a>
+    {% else %}
+    <a class="btn btn-danger float-end" href="{% url 'delete_esi_fleet' fleet.pk %}">Delete Fleet Tracking</a>
+    {% endif %}
+</div>
+<br>
+{% endif %}
+<div class="row">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header bg-info text-white">Fleet Information</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <p>Fleet Commander</p>
+                    </div>
+                    <div class="col">
+                        <p class="card-text">
+                            <img src="https://images.evetech.net/characters/{{fleet.fleet_commander_id}}/portrait?size=32" alt="BearThatCares" width="32" height="32" class="img-thumbnail rounded-circle">
+                            {{fleet.fleet_commander_name}}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Tracking</p>
+                    </div>
+                    <div class="col">
+                        {% if fleet.tracking_active %}
+                        <p class="card-text text-success">Active</p>
+                        {% else %}
+                        <p class="card-text text-danger">Inactive</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Doctrine</p>
+                    </div>
+                    <div class="col">
+                        <p class="card-text">
+                            {% if fleet.doctrine %}
+                            <a href="{% url 'doctrine_detail' fleet.doctrine.slug %}">{{fleet.doctrine.name}}</a>
+                            {% else %}
+                            {{fleet.doctrine}}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        {% if fleet.doctrine %}
+        {% include 'fleets/components/fleet_doctrine_fittings.html' %}
+        {% endif %}
+        <br>
+
+    </div>
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header">
+                Members
+            </div>
+            <div class="card-body">
+                {% if not is_fleet_commander %}
+                <p>Only the fleet commander can view members.</p>
+                {% else %}
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Character</th>
+                            <th scope="col">Ship</th>
+                            <th scope="col">Solar System</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in fleet.esifleet.esifleetmember_set.all %}
+                        <tr>
+                            <td>{{member.character_name}}</td>
+                            <td>
+                                <img src="https://images.evetech.net/types/{{member.ship_type_id}}/icon?size=32" alt="{{member.ship_type_name}}" width="32" height="32" class="img-thumbnail rounded-circle">
+                                {{member.ship_name}}
+                            </td>
+                            <td>{{member.solar_system_name}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <hr>
+                <a class="btn btn-primary" href="{% url 'refresh_esi_fleet_members' fleet.pk %}">Refresh Member List</a>
+                {% endif %}
+            </div>
+        </div>
+        <br>
+    </div>
+</div>
+
+{% endblock %}

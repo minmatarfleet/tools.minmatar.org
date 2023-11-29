@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}View Rosters{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <a class="btn btn-success" href="{% url 'create-roster' %}">Add Corporation</a>
+</div>
+<br>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Rosters</h5>
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Corporation Name</th>
+                            <th scope="col">Members</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for roster in rosters %}
+                        <tr>
+                            <td>{% if not roster.active %}<i class="bi-exclamation-circle-fill text-warning" title="Missing CEO token"></i> {% endif %}{{ roster.name }}</td>
+                            <td>{{ roster.member_count }}</td>
+                            <td>
+                                <a href="{% url 'view-roster' roster.id %}" class="btn btn-primary">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

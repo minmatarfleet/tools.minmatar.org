@@ -1,0 +1,32 @@
+{% load humanize %}
+
+<div class="card flex-fill">
+    <div class="card-header bg-secondary text-white">Contract Historical Summary</div>
+    <div class="card-body">
+        <table class="table datatable">
+            <thead>
+                <tr>
+                    <th scope="col">Contract</th>
+                    <th scope="col">Sold Quantity</th>
+                    <th scope="col">Total Revenue</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in historical_contract_summary.rows %}
+                <tr>
+                    <td>{{ row.contract_title }}</td>
+                    <td>{{ row.sold_quantity}}</td>
+                    <td>{{ row.revenue|intcomma }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>Total Revenue</td>
+                    <td></td>
+                    <td>{{historical_contract_summary.total_revenue|intcomma}}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}View Roster{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Roster: {{ roster.name }}</h5>
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Character Name</th>
+                            <th scope="col">30 Day Activity (kills)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for roster_member in roster.members.all %}
+                        <tr>
+                            <td>{{ roster_member.name }}</td>
+                            <td>{{ roster_member.monthly_kills }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

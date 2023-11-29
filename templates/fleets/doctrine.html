@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}View Doctrine{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'list_doctrines' %}">Doctrines</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{doctrine.name}}</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header">Description</div>
+            <div class="card-body">
+                <p>{{doctrine.description}}</p>
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <div class="card-header">Ideal Composition</div>
+            <div class="card-body">
+                    {% for line in composition %}
+                    <p>{{line}}</p>
+                    {% endfor %}
+            </div>
+        </div>
+        <br>
+
+    </div>
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">Doctrine Fittings</div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fitting in doctrine.fittings.all %}
+                        <tr>
+                            <td><img src="{{ fitting.image }}" width="32" height="32" alt="{{ fitting.name }}"></td>
+                            <td>{{ fitting.name }}</td>
+                            <td>
+                                <a href="{% url 'doctrine_fitting_detail' doctrine.slug fitting.slug %}" class="btn btn-primary">View</a>
+                            </td>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <div class="card-header">Universal Support Fittings</div>
+            <div class="card-body">
+                <p>These fittings are not part of the doctrine, but are universally (all doctrines) acceptable for new players and alts.</p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fitting in universal_fittings %}
+                        <tr>
+                            <td><img src="{{ fitting.image }}" width="32" height="32" alt="{{ fitting.name }}"></td>
+                            <td>{{ fitting.name }}</td>
+                            <td>
+                                <a href="{% url 'doctrine_fitting_detail' doctrine.slug fitting.slug %}" class="btn btn-primary">View</a>
+                            </td>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

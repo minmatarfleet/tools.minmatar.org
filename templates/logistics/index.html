@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Logistics{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">Logistics</li>
+    </ol>
+</nav>
+{% for entity in entities %}
+{% if not entity.active %}
+<div class="alert alert-warning" role="alert">
+    <p>{{entity.corporation_name}} is missing a token. Add it <a href="{% url 'add_courier_token' %}">here</a></p>
+</div>
+{% endif %}
+{% endfor %}
+{% include "logistics/logistics_summary_alert.html" with courier_statistics=courier_current_statistics %}
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-4">
+        {% include "logistics/logistics_summary.html" with title="30 days historical summary" courier_statistics=courier_historical_statistics %}
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-4">
+        {% include "logistics/logistics_summary.html" with title="30 days current summary" courier_statistics=courier_current_statistics %}
+    </div>
+</div>
+{{courier_historical_statistics.character_metrics}}
+{% endblock %}
+

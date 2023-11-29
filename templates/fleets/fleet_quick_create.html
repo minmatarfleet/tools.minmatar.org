@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block title %}Create Fleet{% endblock %}
+
+{% block content %}
+{{ form.media }}
+{% include "fleets/components/time_conversion_utilities.html" %}
+<br>
+<div class="row">
+    <div class="col-md-12 pb-2 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header bg-primary text-white">Create Fleet</div>
+            <div class="card-body">
+                {% crispy form %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

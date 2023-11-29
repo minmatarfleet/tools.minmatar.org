@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Fittings{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">Fittings</li>
+    </ol>
+</nav>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Fittings</h5>
+                <table class="table" id="fittings-table">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Fitting Name</th>
+                            <th scope="col">Fitting Type</th>
+                            <th scope="col">Ship Type</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fitting in fittings %}
+                        <tr>
+                            <td><img src="{{ fitting.image }}" width="32" height="32" alt="{{ fitting.name }}"></td>
+                            <td>{{ fitting.name }}</td>
+                            <td>{{ fitting.fitting_type }}</td>
+                            <td>{{ fitting.ship_type_name }}</td>
+                            <td>
+                                <a href="{% url 'fitting_detail' fitting.slug %}" class="btn btn-primary">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const dataTable = new DataTable("#fittings-table", {
+            initComplete() {
+                const controlsRow = document.querySelector("div#fittings-table_wrapper div.row");
+                controlsRow.classList.add("gy-2")
+                const lengthElem = document.getElementById("fittings-table_length").parentElement;
+                lengthElem.classList.add("col-xl-3");
+                const filterElem = document.getElementById("fittings-table_filter").parentElement;
+                filterElem.classList.add("col-xl-3");
+
+                this.api()
+                    .columns()
+                    .every(function () {
+                        const column = this;
+                        // Only add filters for fitting type and ship type
+                        const columnName = column.header().innerHTML;
+                        if (!["Fitting Type", "Ship Type"].includes(columnName)) {
+                            return;
+                        }
+
+                        // Create outer div element
+                        const outerDiv = document.createElement("div");
+                        outerDiv.classList.add("col-sm-12", "col-md-6", "col-xl-3");
+                        filterElem.insertAdjacentElement("beforebegin", outerDiv);
+
+                        // Create inner div element
+                        const div = document.createElement("div");
+                        div.classList.add("dataTables_length", columnName === "Fitting Type" && "text-end");
+                        outerDiv.appendChild(div);
+
+                        // Create label
+                        const label = document.createElement("label");
+                        label.insertAdjacentText("afterbegin", `${columnName}: `);
+                        div.appendChild(label);
+
+                        // Create select element
+                        const select = document.createElement("select");
+                        select.classList.add("form-select", "form-select-sm");
+                        select.add(new Option(""));
+                        label.insertAdjacentElement("beforeend", select);
+
+                        // Apply listener for user change in value
+                        select.addEventListener("change", function () {
+                            var val = DataTable.util.escapeRegex(select.value);
+                            column.search(val ? "^" + val + "$" : "", true, false).draw();
+                        });
+
+                        // Add list of options
+                        column
+                            .data()
+                            .unique()
+                            .sort()
+                            .each(function (d, j) {
+                                select.add(new Option(d));
+                            });
+                    });
+            }
+        });
+    })
+</script>
+{% endblock %}

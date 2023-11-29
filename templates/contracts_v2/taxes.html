@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Contract Taxes{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Details</h5>
+                <ul class="list-group">
+                    <li class="list-group-item">Estimated taxes for the past 30 days.</li>
+                    <li class="list-group-item">NOTE: Taxes are not formally calculated until the first of the month. These are simply estimates.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Contract Entities</h5>
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Contract Entity</th>
+                            <th scope="col">Estimated Sales</th>
+                            <th scope="col">Estimated Taxes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data %}
+                        <tr>
+                            <td>{{ row.entity_name }}</td>
+                            <td>{{ row.estimated_sales|intcomma }}</td>
+                            <td>{{ row.estimated_tax|intcomma }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>Total</td>
+                            <td>{{ total_estimated_sales|intcomma }}</td>
+                            <td>{{ total_estimated_tax|intcomma }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

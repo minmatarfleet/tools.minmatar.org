@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}Sales: {{ type }}s{% endblock %}
+
+{% block content %}
+<div class="row mb-2">
+    <div class="col-sm-12 col-lg-9 col-xl-8">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Fittings sold during last 30 days</h5>
+                {% block top_card %}
+                {% endblock %}
+                <p class="card-text">This data is also available <a href="{% url json_route %}">as json</a>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 col-lg-9 col-xl-8">
+        <div class="card">
+            <div class="card-body">
+                <table class="table datatable table-hover table-striped-columns" data-page-length="25">
+                    <thead>
+                        <tr>
+                            <th scope="col">{{ type }}</th>
+                            <th scope="col">Last 30 days</th>
+                            <th scope="col">Last week</th>
+                            <th scope="col">Week n-2</th>
+                            <th scope="col">Week n-3</th>
+                            <th scope="col">Week n-4</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% block table_body %}
+                        {% endblock %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

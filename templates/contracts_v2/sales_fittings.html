@@ -1,0 +1,14 @@
+{% extends "./_sales.html" %}
+{% load humanize %}
+
+{% block table_body %}
+{% for row in sales %}
+<tr>
+    <td><a href="{% url 'fitting_detail' row.fitting.slug %}">{{ row.fitting.name }}</a></td>
+    <td class="dt-body-right">{{ row.sales.total|intcomma }}</td>
+    {% for week in row.sales.weeks %}
+    <td class="dt-body-right">{{ week|intcomma }}</td>
+    {% endfor %}
+</tr>
+{% endfor %}
+{% endblock %}

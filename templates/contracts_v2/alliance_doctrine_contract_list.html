@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Public Contracts V2{% endblock %}
+
+{% block content %}
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="{% url 'public-contract-list' %}">Public Seeding</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'public-doctrine-contract-list' %}">Public Doctrine Seeding</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="{% url 'alliance-doctrine-contract-list' %}">Alliance Doctrine Seeding</a>
+    </li>
+</ul>
+<br>
+<div class="row">
+    <div class="col-sm-12">
+        {% include "contracts_v2/components/contract_summary.html" %}
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">Alliance Doctrine Contracts</div>
+            <div class="card-body">
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Doctrine</th>
+                            <th scope="col">Location</th>
+                            <th scope="col">Entities</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for expectation in expectations %}
+                        <tr>
+                            <td><a href="{% url 'doctrine_detail' expectation.doctrine.slug %}">{{expectation.doctrine}}</a></td>
+                            <td>{{expectation.location}}</td>
+                            <td>{{expectation.entity_str}}</td>
+                            <td>N/A</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-sm-6 d-flex">
+        {% include "contracts_v2/components/contract_entities.html" %}
+    </div>
+    <div class="col-sm-6 d-flex">
+        {% include "contracts_v2/components/contract_historical_summary.html" %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+<div class="card">
+    <div class="card-header bg-primary text-white">Fleet Doctrine</div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fitting in fleet.doctrine.fittings.all %}
+                <tr>
+                    <td><img src="{{ fitting.image }}" width="32" height="32" alt="{{ fitting.name }}"></td>
+                    <td>{{ fitting.name }}</td>
+                    <td>
+                        <a href="{% url 'doctrine_fitting_detail' fleet.doctrine.slug fitting.slug %}" class="btn btn-primary">View</a>
+                    </td>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

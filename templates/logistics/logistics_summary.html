@@ -1,0 +1,18 @@
+{% load humanize %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">{{ title }}</h5>
+        <dl>
+            <dt>Total Contracts</dt>
+            <dd>{{ courier_statistics.total_contracts }}</dd>
+            <dt>Total Volume</dt>
+            <dd>{{ courier_statistics.total_volume|floatformat:0|intcomma }}</dd>
+
+            <dt>Total Collateral</dt>
+            <dd>{{ courier_statistics.total_collateral|floatformat:0|intcomma }}</dd>
+
+            <dt>Total Reward</dt>
+            <dd>{{ courier_statistics.total_reward|floatformat:0|intcomma }}</dd>
+        </dl>
+    </div>
+</div>

@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}View Structure{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'list-structures' %}">Structure Intel</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'list-structure-campaigns' %}">Campaigns</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{campaign.name}}</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">Campaign Parameters</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <p>Price Per Structure</p>
+                    </div>
+                    <div class="col">
+                        <p class="card-text">
+                            {{campaign.price_per_structure|floatformat:2}} Million ISK
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>System</p>
+                    </div>
+                    <div class="col">
+                        <p class="card-text">
+                            {% if campaign.system %}
+                            {{campaign.system}}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Constellation</p>
+                    </div>
+                    <div class="col">
+                        <p class="card-text">
+                            {% if campaign.constellation %}
+                            {{campaign.constellation}}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Region</p>
+                    </div>
+                    <div class="col">
+                        <p class="card-text">
+                            {% if campaign.region %}
+                            {{campaign.region}}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Corporation</p>
+                    </div>
+                    <div class="col">
+                        <p class="card-text">
+                            {% if campaign.corporation_id %}
+                            <img src="https://images.evetech.net/corporations/{{structure.corporation_id}}/logo?size=32" class="rounded-circle me-1" alt="...">
+                            {{campaign.corporation_name}}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Alliance</p>
+                    </div>
+                    <div class="col">
+                        <p class="card-text">
+                            {% if campaign.alliance_id %}
+                            <img src="https://images.evetech.net/alliances/{{structure.alliance_id}}/logo?size=32" class="rounded-circle me-1" alt="...">
+                            {{campaign.alliance_name}}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Related Alliance</p>
+                    </div>
+                    <div class="col">
+                        <p class="card-text">
+                            {% if campaign.related_alliance_id %}
+                            <img src="https://images.evetech.net/alliances/{{structure.related_alliance_id}}/logo?size=32" class="rounded-circle me-1" alt="...">
+                            {{campaign.related_alliance_name}}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header">Fitting</div>
+            <div class="card-body">
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Timer</th>
+                            <th scope="col">Structure Name</th>
+                            <th scope="col">System</th>
+                            <th scope="col">Region</th>
+                            <th scope="col">Owner</th>
+                            <th scope="col">Scanned By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for structure in campaign.structures.all %}
+                        <tr>
+                            <td>{{structure.timer}}</td>
+                            <td>
+                                <div>
+                                    <img src="https://images.evetech.net/types/{{ structure.structure_type_id }}/icon?size=32" class="rounded-circle me-1" alt="...">
+                                    {{structure.structure_name}}
+                                </div>
+                            </td>
+                            <td>{{structure.system}}</td>
+                            <td>{{structure.region}}</td>
+                            <td>
+                                {% if structure.related_alliance_name %}
+                                <img src="https://images.evetech.net/alliances/{{ structure.related_alliance_id }}/logo?size=32" class="rounded-circle me-1" alt="...">
+                                {{ structure.related_alliance_name }}
+                                {% elif structure.alliance_name %}
+                                <img src="https://images.evetech.net/alliances/{{ structure.alliance_id }}/logo?size=32" class="rounded-circle me-1" alt="...">
+                                {{ structure.alliance_name }}
+                                {% else %}
+                                <img src="https://images.evetech.net/corporations/{{ structure.corporation_id }}/logo?size=32" class="rounded-circle me-1" alt="...">
+                                {{ structure.corporation_name }}
+                                {% endif %}
+                                
+                            </td>
+                            <td>
+                                <img src="https://images.evetech.net/characters/{{ structure.created_by_character_id }}/portrait?size=32" class="rounded-circle me-1" alt="...">
+                                {{structure.created_by_character_name}}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

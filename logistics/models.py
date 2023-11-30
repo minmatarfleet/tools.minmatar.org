@@ -5,6 +5,26 @@ from esi.models import Token
 esi = EsiClientProvider()
 
 # Create your models here.
+class FreightRoute(models.Model):
+    types = (
+        ('standard', 'Standard'),
+        ('wormhole', 'Wormhole'),
+    )
+    origin = models.CharField(max_length=255)
+    friendly_origin_name = models.CharField(max_length=255)
+    destination = models.CharField(max_length=255)
+    friendly_destination_name = models.CharField(max_length=255)
+
+    type = models.CharField(max_length=255, default='standard', choices=types)
+    
+    # standard freight
+    small_price = models.FloatField(default=0)
+    medium_price = models.FloatField(default=0)
+    large_price = models.FloatField(default=0)
+
+    def __str__(self):
+        return self.friendly_origin_name + ' to ' + self.friendly_destination_name
+    
 class EveCourierEntity(models.Model):
     corporation_id = models.IntegerField(unique=True)
     

@@ -19,6 +19,6 @@ from . import views
 urlpatterns = [
     path('', views.index, name='logistics_index'),
     path('freight/standard', views.standard_freight, name='standard_freight'),
-    path('freight/jump', views.jump_freight, name='jump_freight'),
+    path('freight/wormhole', views.wormhole_freight, name='wormhole_freight'),
     path('add-token', views.add_token, name='add_courier_token'),
 ]

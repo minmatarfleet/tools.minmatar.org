@@ -24,7 +24,6 @@ urlpatterns = [
     path("authentication/", include("eve_auth.urls")),
     path('contracts/', include('contracts_v2.urls')),
     path('referrals/', include('referrals.urls')),
-    path('calculators/', include('calculators.urls')),
     path('fleets/', include('fleets.urls')),
     path('rosters/', include('rosters.urls')),
     path('logistics/', include('logistics.urls')),

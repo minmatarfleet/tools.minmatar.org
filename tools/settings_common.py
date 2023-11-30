@@ -39,7 +39,6 @@ INSTALLED_APPS = [
 
     # Apps
     'internal.apps.InternalConfig',
-    'calculators.apps.CalculatorsConfig',
     'contracts_v2.apps.ContractsV2Config',
     'fleets.apps.FleetsConfig',
     'notifications.apps.NotificationsConfig',

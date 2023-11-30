@@ -13,7 +13,7 @@
         <a class="nav-link active" aria-current="page" href="{% url 'standard_freight' %}">Standard Freight</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{% url 'jump_freight' %}">Jump Freighter Service</a>
+        <a class="nav-link" href="{% url 'wormhole_freight' %}">Wormhole Freight</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{% url 'logistics_index' %}">30 Day Summary</a>
@@ -46,17 +46,6 @@
             else
             {
                 $('#id_collateral').val(updateValue(1, 0, Number.MAX_VALUE));
-            }
-        });
-
-        $('#id_m3').change(function( event ) {
-            if($('#id_m3').val().indexOf('k') != -1 || $('#id_m3').val().indexOf('K') != -1)
-            {
-                $('#id_m3').val(updateValue(1000, 0, 335000))
-            }
-            else
-            {
-                $('#id_m3').val(updateValue(1, 0, 335000))
             }
         });
     });

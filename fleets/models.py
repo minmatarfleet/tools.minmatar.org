@@ -9,36 +9,24 @@ fleet_types = (
     ('frontline', 'Frontline'), # militia pings
     ('battlefield', 'Battlefield'), # militia pings
     ('fun_fleet', 'Fun Fleet'), # all pings
-    ('random', 'Random'), # all pings
     ('training', 'Training'), # all pings
 )
 
 fleet_audiences = (
-    ('militia', 'Militia'),
     ('alliance', 'Alliance'),
-    ('all', 'All'),
+    ('militia', 'Militia'),
+    ('alliance_high_priority', 'Alliance (alarm clock)'),
 )
-
-fleet_type_audience_lookup = {
-    'fun_fleet': 'all',
-    'random': 'all',
-    'training': 'all',
-    'stratop': 'alliance',
-    'flash_form': 'alliance',
-    'frontline': 'militia',
-    'battlefield': 'militia',
-}
 
 # Create your models here.
 class EveFleet(models.Model):
     fleet_id = models.IntegerField(null=True, blank=True)
     fleet_commander_id = models.IntegerField(null=True, blank=True)
     fleet_commander_name = models.CharField(max_length=255, null=True, blank=True)
-    type = models.CharField(max_length=255, choices=fleet_types, default="frontline")
-    audience = models.CharField(max_length=255, choices=fleet_audiences, default='militia')
+    type = models.CharField(max_length=255, choices=fleet_types, default="fun_fleet")
+    audience = models.CharField(max_length=255, choices=fleet_audiences, default='alliance')
     description = models.TextField(null=True, blank=True)
     start_time = models.DateTimeField()
-    end_time = models.DateTimeField(null=True, blank=True)
     
     staging = models.ForeignKey('contracts_v2.EveContractLocation', null=True, on_delete=models.SET_NULL)
     doctrine = models.ForeignKey('EveDoctrine', null=True, blank=True, on_delete=models.SET_NULL)

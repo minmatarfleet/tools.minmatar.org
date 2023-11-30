@@ -2,7 +2,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from django import forms
 from django.urls import reverse
-from .models import EveDoctrine, EveFleet, fleet_types
+from .models import EveDoctrine, EveFleet, fleet_types, fleet_audiences
 from contracts_v2.models import EveContractLocation
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django.utils import timezone
@@ -13,14 +13,15 @@ def get_time():
 
 class EveFleetForm(forms.ModelForm):
     start_time = forms.DateTimeField(widget=DateTimePickerInput(), required=True, initial=get_time)
-    end_time = forms.DateTimeField(widget=DateTimePickerInput(), required=False)
-    doctrine = forms.ModelChoiceField(EveDoctrine.objects, empty_label="Other", required=False)
+    type = forms.ChoiceField(choices=fleet_types, required=True, initial='fun_fleet')
+    audience = forms.ChoiceField(choices=fleet_audiences, required=True, initial='alliance')
+    doctrine = forms.ModelChoiceField(EveDoctrine.objects, empty_label="", required=False)
     description = forms.CharField(widget=forms.Textarea, required=False)
    
 
     class Meta:
         model = EveFleet
-        fields = ['type']
+        fields = ['doctrine']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -30,7 +31,6 @@ class EveFleetForm(forms.ModelForm):
 
 class EveFleetEditForm(forms.ModelForm):
     start_time = forms.DateTimeField(widget=DateTimePickerInput(), required=True, initial=get_time)
-    end_time = forms.DateTimeField(widget=DateTimePickerInput(), required=False)
     staging = forms.ModelChoiceField(EveContractLocation.objects, empty_label="Other", required=True)
     doctrine = forms.ModelChoiceField(EveDoctrine.objects, empty_label="Other", required=False)
     description = forms.CharField(widget=forms.Textarea, required=False)
@@ -38,7 +38,7 @@ class EveFleetEditForm(forms.ModelForm):
     class Meta:
         model = EveFleet
         fields = [
-            'type'
+            'type', 'audience',
         ]
 
     def __init__(self, *args, **kwargs):

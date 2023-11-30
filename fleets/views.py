@@ -2,7 +2,7 @@ import re
 from django.shortcuts import render, redirect
 from django.views.decorators.cache import cache_page
 from .authorization import required_roles, character_id_has_roles
-from .models import EveFleet, EveDoctrine, EveFitting, EveFleetDiscordNotification, EsiFleet, fleet_type_audience_lookup
+from .models import EveFleet, EveDoctrine, EveFitting, EveFleetDiscordNotification, EsiFleet
 from contracts_v2.models import EveContractLocation
 from .forms import EveFleetForm, EveFleetEditForm
 from .motd import get_motd
@@ -45,44 +45,66 @@ def list_fleet_history(request):
 @required_roles(roles=["Alliance"], redirect_url='list_fleet')
 def create_fleet(request):
     eve_character = request.user.eve_character
+    # guard audience by roles
+    allowed_audiences = (
+        ('alliance', 'Alliance'),
+    )
+    if character_id_has_roles(eve_character.character_id, ['Frontline FC', 'FC']):
+        allowed_audiences = allowed_audiences + (('militia', 'Militia'),)
+    if character_id_has_roles(eve_character.character_id, ['FC']):
+        allowed_audiences = allowed_audiences + (('alliance_high_priority', 'Alliance (alarm clock)'),)
+
     # guard types by roles
     allowed_types = (
         ('fun_fleet', 'Fun Fleet'),
-        ('random', 'Random'),
         ('training', 'Training'),
+        ('frontline', 'Frontline'),
+        ('battlefield', 'Battlefield'),
     )
-    if character_id_has_roles(eve_character.character_id, ['Frontline FC', 'FC']):
-        allowed_types = allowed_types + (('frontline', 'Frontline'), ('battlefield', 'Battlefield'))
 
     if character_id_has_roles(eve_character.character_id, ['FC']):
-        allowed_types = allowed_types + (('stratop', 'Stratop'), ('flash_form', 'Flash Form'))
-
-
+        allowed_types = allowed_types + (('flash_form', 'Flash Form'), ('stratop', 'Strategic'))
+    
     if request.method == 'POST':
         form = EveFleetForm(request.POST)
         if form.is_valid():
+            print("form is valid")
+            if form.cleaned_data['audience'] not in [t[0] for t in allowed_audiences]:
+                print("audience not allowed")
+                messages.add_message(
+                    request, 
+                    messages.ERROR, 
+                    'You are only authorized for the following fleet audiences: ' +  str([t[0] for t in allowed_audiences]),
+                )
+                return redirect('create_fleet')
+
             if form.cleaned_data['type'] not in [t[0] for t in allowed_types]:
+                print("type not allowed")
                 messages.add_message(
                     request, 
                     messages.ERROR, 
                     'You are only authorized for the following fleet types: ' +  str([t[0] for t in allowed_types]),
                 )
                 return redirect('create_fleet')
+            print("Creating fleet")
             fleet = EveFleet(
                 fleet_commander_id=eve_character.character_id,
                 fleet_commander_name=eve_character.character_name,
                 type=form.cleaned_data['type'],
-                audience=fleet_type_audience_lookup[form.cleaned_data['type']],
+                audience=form.cleaned_data['audience'],
                 start_time=form.cleaned_data['start_time'],
-                end_time=form.cleaned_data['end_time'],
                 staging=EveContractLocation.objects.get(primary=True),
                 doctrine=form.cleaned_data['doctrine'],
                 description=form.cleaned_data['description'],
             )
             fleet.save()
             return redirect('list_fleet')
+        else:
+            print("form is not valid")
+            print(form.errors)
     
     form = EveFleetForm()
+    form.fields['audience'].choices = allowed_audiences
     form.fields['type'].choices = allowed_types
     return render(request, 'fleets/fleet_create.html', {'form': form})
 
@@ -107,15 +129,14 @@ def edit_fleet(request, pk):
         form = EveFleetEditForm(request.POST)
         if form.is_valid():
             fleet.type=form.cleaned_data['type']
-            fleet.audience=fleet_type_audience_lookup[form.cleaned_data['type']]
+            fleet.audience=form.cleaned_data['audience'],
             fleet.start_time=form.cleaned_data['start_time']
-            fleet.end_time=form.cleaned_data['end_time']
             fleet.staging=form.cleaned_data['staging']
             fleet.doctrine=form.cleaned_data['doctrine']
             fleet.description=form.cleaned_data['description']
             fleet.save()
             return redirect('fleet_detail', pk=pk)
-    form = EveFleetEditForm(initial={'staging': fleet.staging, 'doctrine': fleet.doctrine, 'start_time': fleet.start_time, 'end_time': fleet.end_time, 'type': fleet.type, 'audience': fleet.audience})
+    form = EveFleetEditForm(initial={'staging': fleet.staging, 'doctrine': fleet.doctrine, 'start_time': fleet.start_time, 'type': fleet.type, 'audience': fleet.audience})
     return render(request, 'fleets/fleet_edit.html', {'form': form})
 
 def delete_fleet(request, pk):

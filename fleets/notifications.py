@@ -148,14 +148,8 @@ def get_preping_notification(fleet):
     return webhook_payload
 
 def get_ping_notification(fleet):
-    time = fleet.start_time.strftime("%Y-%m-%d %H:%M")
-    unix_timestamp = int(fleet.start_time.timestamp())
-    if fleet.audience == 'all':
-        audience = "@here"
-    else:
-        audience = "@everyone"
     webhook_payload = {
-        "content": audience,
+        "content": "@everyone",
         "components": [
             {
             "type": 1,

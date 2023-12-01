@@ -35,7 +35,7 @@ valid_file_prefixes = [
 def update_fittings():
     PATH = './exports/fittings'
     shutil.rmtree(PATH, ignore_errors=True)
-    repo = Repo.clone_from("https://github.com/unkwntech/FL33T-Fits.git", PATH)
+    repo = Repo.clone_from("https://github.com/Minmatar-Fleet-Alliance/FL33T-Fits", PATH)
     files = [os.path.join(dp, f) for dp, dn, filenames in os.walk(PATH) for f in filenames if os.path.splitext(f)[1] == '.md']
 
     current_version = repo.head.object.hexsha

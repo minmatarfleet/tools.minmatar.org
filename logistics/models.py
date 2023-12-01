@@ -23,7 +23,7 @@ class FreightRoute(models.Model):
     large_price = models.FloatField(default=0)
 
     def __str__(self):
-        return self.friendly_origin_name + ' to ' + self.friendly_destination_name
+        return self.friendly_origin_name + ' <> ' + self.friendly_destination_name
     
 class EveCourierEntity(models.Model):
     corporation_id = models.IntegerField(unique=True)

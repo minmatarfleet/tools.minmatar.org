@@ -1,0 +1,38 @@
+version: '2.0'
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        command: gunicorn tools.wsgi -w 13 -b 0.0.0.0:8000
+        ports:
+            - "8000:8000"
+        depends_on:
+            - db
+
+    beat:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: always
+        env_file: .env
+        command: celery -A tools beat -l info
+        depends_on:
+            - db
+            - app
+    
+    celery:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: always
+        env_file: .env
+        command: celery -A tools worker -l info
+        depends_on:
+            - db
+            - app 
+
+volumes:
+    database: {}
+    redis: {}

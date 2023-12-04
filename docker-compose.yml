@@ -1,6 +1,11 @@
 version: '2.0'
 
 services:
+    redis:
+        image: redis:6.0.9-alpine
+        volumes:
+            - "redis:/var/lib/redis"
+            - "redis:/data"
     app:
         build:
             context: .
@@ -18,6 +23,7 @@ services:
         command: celery -A tools beat -l info
         depends_on:
             - app
+            - redis
     
     celery:
         build:
@@ -28,3 +34,7 @@ services:
         command: celery -A tools worker -l info
         depends_on:
             - app
+            - redis
+
+volumes:
+    redis: {}

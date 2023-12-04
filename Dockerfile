@@ -1,6 +1,8 @@
 FROM python:3.10.9-slim-buster
 # install git for doctine pulling 
 RUN apt-get update && apt-get install -y git
+RUN apt-get -y install libmariadb-dev
+RUN apt-get -y install gcc
 # add user and set up repos
 RUN adduser --disabled-password --gecos '' tools
 RUN mkdir -p /opt/tools

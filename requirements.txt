@@ -42,7 +42,7 @@ kombu==5.2.4
 monotonic==1.6
 msgpack==1.0.4
 multidict==6.0.4
-mysqlclient==2.2.0
+mysqlclient==2.1.1
 oauthlib==3.2.2
 Pillow==10.0.0
 prompt-toolkit==3.0.36

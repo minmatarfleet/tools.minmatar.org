@@ -19,8 +19,12 @@ def character_id_has_roles(character_id, roles):
                 return False
             character_id = result[0]
             character_id_roles = result[1].split(',')
+            character_id_state = result[2]
             for role in roles:
                 if role not in character_id_roles:
+                    # some roles are states (e.g Alliance)
+                    if role == character_id_state:
+                        continue
                     return False
             return True 
     except ConnectionDoesNotExist:

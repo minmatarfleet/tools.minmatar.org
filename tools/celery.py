@@ -3,7 +3,7 @@ from celery import Celery
 from celery.app import trace
 
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tools.settings_production')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tools.settings')
 
 from django.conf import settings  # noqa
 

@@ -6,54 +6,9 @@ import requests
 from datetime import datetime, timedelta
 from discoPy.rest.client import Application, User, Guild, Channel, Stage, Webhook
 from django.conf import settings
-from .helpers import get_eve_character_for_discord_username
 from django.utils import timezone
 
 esi = EsiClientProvider()
-
-@app.task()
-def get_fc_stats(days=14):
-    token = settings.DISCORD_BOT_TOKEN
-    channel = Channel(token=token)
-    data = {}
-    threads = []
-    threads_response = channel.list_public_archived_threads(channel_id=1069380111897481256, limit=100)
-    for thread in threads_response['threads']:
-        threads.append(thread)
-
-    guild = Guild(token=token)
-    threads_response = guild = guild.list_active_threads(guild_id=1041384161505722368)
-    for thread in threads_response['threads']:
-        if int(thread['parent_id']) != 1069380111897481256:
-            print("skipping thread, not in aars channel: {}".format(thread['name']))
-            continue
-        threads.append(thread)
-
-    for thread in threads:
-        # load threads_response['threads'][0]['thread_metadata']['create_timestamp'] into datetime
-        # format: 2023-03-15T20:23:41.483247+00:00
-        thread_created_time = datetime.strptime(thread['thread_metadata']['create_timestamp'], '%Y-%m-%dT%H:%M:%S.%f%z')
-        # skip threads older than 30 days
-        if thread_created_time < timezone.now() - timedelta(days=days):
-            print("skipping thread, older than 30 days: {}".format(thread['name']))
-            continue
-
-        if thread['owner_id'] not in data:
-            data[thread['owner_id']] = 0
-
-        data[thread['owner_id']] += 1
-        print("logging thread: {}".format(thread['name']))
-
-    response = {}
-    for key, value in data.items():
-        try:
-            character_name = get_eve_character_for_discord_username(key)
-        except Exception as e:
-            print("failed to get character name for discord id: {}".format(key))
-            continue
-        response[character_name] = value
-    
-    return response
 
 def get_fc_report():
     two_week_stats = get_fc_stats(14)

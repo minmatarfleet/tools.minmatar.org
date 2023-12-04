@@ -3,6 +3,7 @@ version: '2.0'
 services:
     redis:
         image: redis:6.0.9-alpine
+        restart: always
         volumes:
             - "redis:/var/lib/redis"
             - "redis:/data"
@@ -10,6 +11,8 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+        env_file: .env
+        restart: always
         command: gunicorn tools.wsgi -w 13 -b 0.0.0.0:8000
         ports:
             - "8080:8000"

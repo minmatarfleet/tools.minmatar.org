@@ -8,6 +8,7 @@ services:
         MYSQL_ROOT_PASSWORD: example
       volumes:
           - database:/var/lib/mysql
+          - ./dev/mariadb:/docker-entrypoint-initdb.d
 
     redis:
         image: redis:6.0.9-alpine

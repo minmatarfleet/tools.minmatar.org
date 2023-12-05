@@ -1,17 +1,17 @@
 # tools.minmatar.org
 
 # local development quickstart
-1. Setup your `docker-compose.yml` to contain the contents of `docker-compose-local.yml`.
-2. Setup your `.env` file based on the `.env.example` file with the information you get from CCP's ESI page (create your own application at: https://developers.eveonline.com/), the username and password you'd like to use for the website database, and the auth database password from BearThatCares.
-3. Run `docker compose up -d` to create and start the containers.
-4. Run `docker compose exec db mariadb -u root -p` and use the password set in the `docker-compose-local.yml` file under the `MYSQL_ROOT_PASSWORD` section.
-5. Create a user in mariadb that will be used by the server: `CREATE USER 'tools'@'%' IDENTIFIED BY 'example';` to create a user with the password 'example'. Make sure this matches what's in your `.env` file.
-6. Create the tools database: `CREATE DATABASE tools CHARACTER SET utf8mb4;`.
-7. Grant user privileges to that database: `GRANT ALL PRIVILEGES ON tools.* TO 'tools'@'%';` and exit mariadb (`EXIT;`).
-8. Run `docker compose exec app python3 manage.py migrate`. This creates all the tables in the database for you.
-9. Navigate to http://localhost:8000 and you should see the website.
+1. Copy the contents of `docker-compose-local.yml` into `docker-compose.yml`
+2. Setup your `.env` file based on the `.env.example` file
+  - Create an application [here](https://developers.eveonline.com/) with CCP and get the ESI Client ID and ESI Secret Key
+  - By default the database user passwords are `example` for users `root` and `tools`, if you'd like this to be different update the relevant sections in `.env`, `docker-compose.yml`, and `dev/mariadb/setup.sql`
+  - Get the auth database password from BearThatCares
+3. Run `docker compose up -d` to create and start the containers. In the background this sets up the needed database users and database.
+4. Run `docker compose exec app python3 manage.py migrate`. This creates all the tables in the database for you.
+5. Navigate to http://localhost:8000 and you should see the website.
 
-This isn't a super quick quickstart and we're still working on streamlining it. If you have issues reach out to the technology team and we'll do our best to help.
+This isn't a perfect setup and we're still working on streamlining it. If you have issues reach out to the technology team and we'll do our best to help.
+Once you set this up once it will keep your db setup between development instances and you will only need to migrate if you change the database structure.
 
 # uses
 1. Django

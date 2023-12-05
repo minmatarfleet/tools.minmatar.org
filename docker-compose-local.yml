@@ -6,6 +6,8 @@ services:
       restart: always
       environment:
         MYSQL_ROOT_PASSWORD: example
+      volumes:
+          - database:/var/lib/mysql
 
     redis:
         image: redis:6.0.9-alpine

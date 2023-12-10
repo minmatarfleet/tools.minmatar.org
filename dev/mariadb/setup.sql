@@ -1,0 +1,3 @@
+CREATE USER 'tools'@'%' IDENTIFIED BY 'example';
+CREATE DATABASE tools CHARACTER SET utf8mb4;
+GRANT ALL PRIVILEGES ON tools.* TO 'tools'@'%';

@@ -22,6 +22,8 @@ class FreightRoute(models.Model):
     medium_price = models.FloatField(default=0)
     large_price = models.FloatField(default=0)
 
+    no_collateral = models.BooleanField(default=False)
+
     def __str__(self):
         return self.friendly_origin_name + ' <> ' + self.friendly_destination_name
     

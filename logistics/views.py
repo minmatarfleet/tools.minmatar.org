@@ -74,6 +74,8 @@ def standard_freight(request):
             
             # Collateral
             current_collateral_modifier = collateral_modifier
+            if route.no_collateral:
+                current_collateral_modifier = 0
             collateral_reward = form.cleaned_data['collateral'] * \
                 current_collateral_modifier
             

@@ -6,7 +6,7 @@ from .models import FreightRoute
 
 class StandardFreightCalculatorForm(forms.Form):
     route = forms.ModelChoiceField(queryset=FreightRoute.objects.filter(type='standard'), label='Route')
-    m3 = forms.ChoiceField(choices=[('small', '12,500'), ('medium', '52,500'), ('large', '335,000')], label='Contract Size (m3)')
+    m3 = forms.ChoiceField(choices=[('small', '12,500'), ('medium', '60,000'), ('large', '335,000')], label='Contract Size (m3)')
     collateral = forms.CharField(label='Collateral (e.g 1.4b)')
 
     def __init__(self, *args, **kwargs):

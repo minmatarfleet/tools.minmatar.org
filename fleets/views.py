@@ -49,7 +49,7 @@ def create_fleet(request):
     allowed_audiences = (
         ('alliance', 'Alliance'),
     )
-    if character_id_has_roles(eve_character.character_id, ['Frontline FC', 'FC']):
+    if character_id_has_roles(eve_character.character_id, ['Skirmish FC', 'FC']):
         allowed_audiences = allowed_audiences + (('militia', 'Militia'),)
     if character_id_has_roles(eve_character.character_id, ['FC']):
         allowed_audiences = allowed_audiences + (('alliance_high_priority', 'Alliance (alarm clock)'),)
@@ -113,7 +113,7 @@ def view_fleet(request, pk):
     fleet = EveFleet.objects.get(pk=pk)
     if not request.user.is_anonymous and fleet.fleet_commander_id == request.user.eve_character.character_id:
         is_fleet_commander = True
-    if not request.user.is_anonymous and character_id_has_roles(request.user.eve_character.character_id, ['FC', 'Frontline FC']):
+    if not request.user.is_anonymous and character_id_has_roles(request.user.eve_character.character_id, ['FC', 'Skirmish FC']):
         is_fleet_commander = True
     return render(request, 'fleets/fleet_view.html', {'fleet': fleet, 'is_fleet_commander': is_fleet_commander})
 

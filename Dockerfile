@@ -13,5 +13,6 @@ RUN pip3 install -r /opt/tools/requirements.txt
 RUN pip3 install gunicorn
 
 WORKDIR /opt/tools
+RUN python manage.py collectstatic --noinput
 # keep open for debugging
 CMD ["tail", "-f", "/dev/null"]

@@ -11,6 +11,8 @@ class StructureIntel(models.Model):
         ("sotiyo", "Sotiyo"),
         ("athanor", "Athanor"),
         ("tatara", "Tatara"),
+        ("ansiblex", "Ansiblex Jump Gate"),
+        ("pharolux", "Pharolux Cyno Beacon"),
     )
     structure_name = models.CharField(max_length=255)
     structure_type = models.CharField(max_length=255, choices=structure_types)

@@ -24,38 +24,32 @@ structure_type_ids = {
 }
 
 @login_required
-@required_roles(['Alliance', 'Associate', 'Militia'])
 def view_structure_campaign(request, campaign_id):
     campaign = StructureIntelCampaign.objects.get(id=campaign_id)
     return render(request, 'intel/view_structure_campaign.html', {'campaign': campaign})
 
 @login_required
-@required_roles(['Alliance', 'Associate', 'Militia'])
 def list_structure_campaigns(request):
     campaigns = StructureIntelCampaign.objects.all()
     return render(request, 'intel/list_structure_campaigns.html', {'campaigns': campaigns})
 
 @login_required
-@required_roles(['Alliance', 'Associate'])
 def view_structure(request, structure_id):
     structure = StructureIntel.objects.get(id=structure_id)
     return render(request, 'intel/view_structure.html', {'structure': structure})
 
 @login_required
-@required_roles(['Alliance', 'Associate'])
 def list_structures(request):
     structures = StructureIntel.objects.all()
     return render(request, 'intel/list_structures.html', {'structures': structures, 'campaigns': StructureIntelCampaign.objects.filter(status="active")})
 
 @login_required
-@required_roles(['Fleet Commander'])
 def delete_structure(request, structure_id):
     structure = StructureIntel.objects.get(id=structure_id)
     structure.delete()
     return redirect('list-structures')
 
 @login_required
-@required_roles(['Alliance', 'Associate', 'Militia'])
 def create_structure(request):
     if request.method == 'POST':
         form = StructureForm(request.POST)

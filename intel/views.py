@@ -109,7 +109,7 @@ def create_structure(request):
             try:
                 structure.save()
             except IntegrityError as e:
-                messages.add_message(request, messages.ERROR, 'Structure already registered')
+                messages.add_message(request, messages.ERROR, e)
                 return render(request, 'intel/create_structure.html', {'form': form})
             
             # register campaign if it exists

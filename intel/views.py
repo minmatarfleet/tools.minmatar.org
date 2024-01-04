@@ -21,6 +21,8 @@ structure_type_ids = {
     "sotiyo": 35827,
     "athanor": 35835,
     "tatara": 35836,
+    "ansiblex": 35841,
+    "pharolux": 35840,
 }
 
 @login_required

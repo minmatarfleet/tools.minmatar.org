@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from .models import StructureIntel, StructureIntelCampaign
-from .forms import StructureForm
+from datetime import datetime
+from .models import StructureIntel, StructureIntelCampaign, StructureTimer
+from .forms import StructureForm, StructureTimerForm
 from esi.clients import EsiClientProvider
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -123,3 +124,62 @@ def create_structure(request):
     else:
         form = StructureForm()
     return render(request, 'intel/create_structure.html', {'form': form})
+
+@login_required
+@required_roles(['Alliance', 'Associate'])
+def list_timers(request):
+    timers = StructureTimer.objects.filter(Q(timer__gte=datetime.now())).order_by('timer').all()
+    return render(request, 'intel/list_timers.html', {'timers': timers})
+
+@login_required
+@required_roles(['Alliance', 'Associate'])
+def create_timer(request):
+    if request.method == 'POST':
+        form = StructureTimerForm(request.POST)
+        if form.is_valid():
+            timer = StructureTimer(
+                structure_name = form.cleaned_data['structure_name'],
+                structure_type = form.cleaned_data['structure_type'],
+                system = form.cleaned_data['system'],
+                alliance_name = form.cleaned_data['alliance'],
+                timer_type = form.cleaned_data['timer_type'],
+                timer = form.cleaned_data['timer'],
+            )
+
+            timer.structure_type_id = structure_type_ids[timer.structure_type]
+            timer.created_by_character_id = request.user.eve_character.character_id
+            timer.created_by_character_name = request.user.eve_character.character_name
+
+
+            try:
+                names_to_resolve = set()
+                names_to_resolve.add(timer.system)
+                names_to_resolve.add(timer.alliance_name)
+                resolved_ids = esi.client.Universe.post_universe_ids(names=list(names_to_resolve)).results()
+
+                if resolved_ids['alliances']:
+                    for id in resolved_ids['alliances']:
+                        if id['name'] == timer.alliance_name:
+                            timer.alliance_id = id['id']
+
+                for id in resolved_ids['systems']:
+                    if id['name'] == timer.system:
+                        timer.system_id = id['id']
+                        # fetch constellation id from esi
+                        timer.constellation_id = esi.client.Universe.get_universe_systems_system_id(system_id=id['id']).results()['constellation_id']
+                        timer.constellation = esi.client.Universe.get_universe_constellations_constellation_id(constellation_id=timer.constellation_id).results()['name']
+                        # fetch region id from esi
+                        timer.region_id = esi.client.Universe.get_universe_constellations_constellation_id(constellation_id=timer.constellation_id).results()['region_id']
+                        timer.region = esi.client.Universe.get_universe_regions_region_id(region_id=timer.region_id).results()['name']
+
+            except Exception as e:
+                print(e)
+                messages.add_message(request, messages.ERROR, 'Failed to resolve alliance name or system')
+                return render(request, 'intel/create_structure.html', {'form': form})
+
+            timer.save()
+
+            return redirect('list-timers')
+    else:
+        form = StructureTimerForm()
+    return render(request, 'intel/create_timer.html', {'form': form})

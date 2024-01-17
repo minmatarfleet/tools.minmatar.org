@@ -1,6 +1,7 @@
+from datetime import datetime, timezone
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout
-from .models import StructureIntel
+from .models import StructureIntel, StructureTimer
 from django import forms
 
 class StructureForm(forms.Form):
@@ -33,3 +34,22 @@ class StructureForm(forms.Form):
         except ValueError:
             raise forms.ValidationError("Timer must be in format MM:SS")
         return cleaned_data
+
+class StructureTimerForm(forms.Form):
+    structure_name = forms.CharField(label='Structure Name', max_length=255)
+    structure_type = forms.CharField(label='Structure Type', max_length=255, widget=forms.Select(choices=StructureTimer.structure_types))
+    system = forms.CharField(label='System', max_length=255)
+    alliance = forms.CharField(label='Owning alliance', max_length=255)
+    timer_type = forms.CharField(label='Timer Type', max_length=255, widget=forms.Select(choices=StructureTimer.timer_types))
+    timer = forms.DateTimeField(label='Timer in EVE Time', widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.add_input(Submit('submit', 'Submit'))
+
+    def clean_timer(self):
+        timer = self.cleaned_data['timer']
+        if timer < datetime.now(timezone.utc):
+            raise forms.ValidationError("Timer must be in the future")
+        return timer

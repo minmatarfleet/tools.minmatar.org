@@ -53,3 +53,14 @@ class StructureTimerForm(forms.Form):
         if timer < datetime.now(timezone.utc):
             raise forms.ValidationError("Timer must be in the future")
         return timer
+
+class StructureTimerPasteForm(forms.Form):
+    paste = forms.CharField(label='Paste', widget=forms.Textarea(attrs={'rows': 4}))
+    structure_type = forms.CharField(label='Structure Type', max_length=255, widget=forms.Select(choices=StructureTimer.structure_types))
+    timer_type = forms.CharField(label='Timer Type', max_length=255, widget=forms.Select(choices=StructureTimer.timer_types))
+    alliance = forms.CharField(label='Owning alliance', max_length=255)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.add_input(Submit('submit', 'Submit'))

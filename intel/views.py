@@ -187,7 +187,9 @@ def create_timer(request):
 
 def parse_paste(paste):
     [first, _, third] = paste.splitlines()
-    [system, structure_name] = first.split(' - ')
+    first = first.split(' - ')
+    system = first[0]
+    structure_name = ' - '.join(first[1:])
     [_, timer] = third.split(' until ')
     timer = datetime.strptime(timer, '%Y.%m.%d %H:%M:%S')
     return StructureTimer(

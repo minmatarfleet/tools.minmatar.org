@@ -40,12 +40,14 @@
                                 </div>
                             </td>
                             <td>{{timer.timer_type|capfirst}}</td>
-                            <td>{{timer.system}}</td>
-                            <td>{{timer.region}}</td>
+                            <td><a href="https://evemaps.dotlan.net/system/{{timer.system}}">{{timer.system}}</a></td>
+                            <td><a href="https://evemaps.dotlan.net/map/{{timer.region}}">{{timer.region}}</a></td>
                             <td>
                                 <img src="https://images.evetech.net/alliances/{{ timer.alliance_id }}/logo?size=32"
                                     class="rounded-circle me-1" alt="{{timer.alliance_name}}" />
-                                {{ timer.alliance_name }}
+                                <a href="https://evemaps.dotlan.net/alliance/{{timer.alliance_name}}">
+                                    {{timer.alliance_name }}
+                                </a>
                             </td>
                             <td class="timer">{{timer.timer|date:"c"}}</td>
                             <td class="relative" data-epoch={{timer.timer|date:"U"}}></td>

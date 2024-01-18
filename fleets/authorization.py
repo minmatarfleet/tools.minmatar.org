@@ -10,23 +10,33 @@ def character_id_has_roles(character_id, roles):
     try:
         with connections['allianceauth'].cursor() as cursor:
             query = """
-            SELECT * from CHARACTER_UID_LOOKUP where character_id = %s;
+            WITH characters AS (
+                SELECT ac.user_id, ee.character_id, ee.character_name
+                from eveonline_evecharacter ee
+                join authentication_characterownership ac on ac.character_id = ee.id
+            ),
+            user_groups as (
+                SELECT aug.user_id, ag.name
+                from auth_user_groups aug
+                join auth_group ag on ag.id = aug.group_id
+            ),
+            user_states as (
+                select aup.user_id, ast.name
+                from authentication_userprofile aup
+                join authentication_state ast on ast.id = aup.state_id
+            )
+            SELECT characters.user_id, user_groups.name, user_states.name
+            FROM characters
+            LEFT JOIN user_groups ON user_groups.user_id = characters.user_id
+            LEFT JOIN user_states ON user_states.user_id = characters.user_id
+            WHERE characters.character_id=%s
+            AND (user_groups.name IN %s OR user_states.name IN %s);
             """
             # fetch 'id' from discord_discorduser where uid = discord_id
-            cursor.execute(query, [character_id])
+            cursor.execute(query, [character_id, roles, roles])
             result = cursor.fetchone()
-            if not result:
-                return False
-            character_id = result[0]
-            character_id_roles = result[1].split(',')
-            character_id_state = result[2]
-            for role in roles:
-                if role not in character_id_roles:
-                    # some roles are states (e.g Alliance)
-                    if role == character_id_state:
-                        continue
-                    return False
-            return True 
+            print(result)
+            return result is not None
     except ConnectionDoesNotExist:
         if settings.DEBUG:
             return True

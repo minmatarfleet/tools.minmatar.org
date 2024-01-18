@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Structure Timers{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-sm-12">
+        <a class="btn btn-success" href="{% url 'create-timer' %}">Add structure timer</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Structures</h5>
+                <table class="datatable table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Structure</th>
+                            <th scope="col">Timer type</th>
+                            <th scope="col">System</th>
+                            <th scope="col">Region</th>
+                            <th scope="col">Owner</th>
+                            <th scope="col">When</th>
+                            <th scope="col">Countdown</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for timer in timers %}
+                        <tr>
+                            <td>
+                                <div>
+                                    <img src="https://images.evetech.net/types/{{ timer.structure_type_id }}/icon?size=32"
+                                        class="rounded-circle me-1" alt="{{timer.structure_type|capfirst}}"
+                                        title="{{timer.structure_type|capfirst}}" />
+                                    {{timer.structure_name}}
+                                </div>
+                            </td>
+                            <td>{{timer.timer_type|capfirst}}</td>
+                            <td>{{timer.system}}</td>
+                            <td>{{timer.region}}</td>
+                            <td>
+                                <img src="https://images.evetech.net/alliances/{{ timer.alliance_id }}/logo?size=32"
+                                    class="rounded-circle me-1" alt="{{timer.alliance_name}}" />
+                                {{ timer.alliance_name }}
+                            </td>
+                            <td class="timer">{{timer.timer|date:"c"}}</td>
+                            <td class="relative" data-epoch={{timer.timer|date:"U"}}></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/countdown/2.6.0/countdown.min.js"
+    integrity="sha512-FkM4ZGExuYz4rILLbNzw8f3HxTN9EKdXrQYcYfdluxJBjRLthYPxxZixV/787qjN3JLs2607yN5XknR/cQMU8w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    const dateFormat = new Intl.DateTimeFormat(undefined, {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+    });
+
+    const fmt = (ts) => {
+        const d = ts.days ? `${ts.days}d ` : '';
+        return `${d}${ts.hours}h ${ts.minutes}m ${ts.seconds}s`;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".timer").forEach((timer) => {
+            const date = new Date(timer.innerText);
+            timer.innerText = dateFormat.format(date);
+            const relative = timer.nextElementSibling;
+            const timestamp = relative.dataset.epoch * 1000;
+            const intervalId = countdown(timestamp, (ts) => {
+                relative.innerText = fmt(ts);
+            }, countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS);
+        });
+    });
+</script>
+{% endblock %}

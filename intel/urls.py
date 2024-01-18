@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
-from . import views 
+from . import views
 
 urlpatterns = [
     path('structures', views.list_structures, name='list-structures'),
@@ -25,4 +25,6 @@ urlpatterns = [
     path('structures/create', views.create_structure, name='create-structure'),
     path('structures/campaigns', views.list_structure_campaigns, name='list-structure-campaigns'),
     path('structures/campaigns/<int:campaign_id>/', views.view_structure_campaign, name='view-structure-campaign'),
+    path('timers/create', views.create_timer, name='create-timer'),
+    path('timers', views.list_timers, name='list-timers'),
 ]

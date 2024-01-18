@@ -81,7 +81,7 @@ class StructureTimer(models.Model):
     alliance_name = models.CharField(max_length=255)
     alliance_id = models.BigIntegerField()
 
-    timer_types = (("armor", "Armor"), ("structure", "Structure"))
+    timer_types = (("armor", "Armor"), ("structure", "Structure"), ("anchoring", "Anchoring"))
     timer_type = models.CharField(max_length=255, choices=timer_types)
     timer = models.DateTimeField()
 

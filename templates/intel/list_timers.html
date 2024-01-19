@@ -24,7 +24,8 @@
                             <th scope="col">System</th>
                             <th scope="col">Region</th>
                             <th scope="col">Owner</th>
-                            <th scope="col">When</th>
+                            <th scope="col">EVE Time</th>
+                            <th scope="col">Local Time</th>
                             <th scope="col">Countdown</th>
                         </tr>
                     </thead>
@@ -57,8 +58,17 @@
                                     {{timer.alliance_name }}
                                 </a>
                             </td>
-                            <td class="timer">{{timer.timer|date:"c"}}</td>
-                            <td class="relative" data-epoch={{timer.timer|date:"U"}}></td>
+                            <td class="font-monospace">{{timer.timer|date:"Y-m-d H:i"}}</td>
+                            <td class="local-time font-monospace" data-utc-time="{{timer.timer|date:'c'}}">
+                                <p class="placeholder-glow">
+                                    <span class="placeholder w-75"></span>
+                                </p>
+                            </td>
+                            <td class="font-monospace" data-epoch="{{timer.timer|date:'U'}}">
+                                <p class="placeholder-glow">
+                                    <span class="placeholder w-75"></span>
+                                </p>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -74,29 +84,35 @@
     integrity="sha512-FkM4ZGExuYz4rILLbNzw8f3HxTN9EKdXrQYcYfdluxJBjRLthYPxxZixV/787qjN3JLs2607yN5XknR/cQMU8w=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    const dateFormat = new Intl.DateTimeFormat(undefined, {
+    // Swedish locale looks like ISO8601
+    const dateFormat = new Intl.DateTimeFormat("sv-SE", {
         year: "numeric",
         month: "numeric",
         day: "numeric",
         hour: "numeric",
         minute: "numeric",
-        second: "numeric",
+        timeZoneName: "short",
     });
 
     const fmt = (ts) => {
-        const d = ts.days ? `${ts.days}d ` : '';
-        return `${d}${ts.hours}h ${ts.minutes}m ${ts.seconds}s`;
-    }
+        const d = ts.days ? `${ts.days}d ` : "";
+        const h = ts.hours ? `${ts.hours}h ` : "";
+        return `${d}${h}${ts.minutes}m ${ts.seconds}s`;
+    };
 
     document.addEventListener("DOMContentLoaded", () => {
-        document.querySelectorAll(".timer").forEach((timer) => {
-            const date = new Date(timer.innerText);
+        document.querySelectorAll(".local-time").forEach((timer) => {
+            const date = new Date(timer.dataset.utcTime);
             timer.innerText = dateFormat.format(date);
+            // Get the countdown td element
             const relative = timer.nextElementSibling;
-            const timestamp = relative.dataset.epoch * 1000;
-            const intervalId = countdown(timestamp, (ts) => {
-                relative.innerText = fmt(ts);
-            }, countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS);
+            const intervalId = countdown(
+                relative.dataset.epoch * 1000,
+                (ts) => {
+                    relative.innerText = fmt(ts);
+                },
+                countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS,
+            );
         });
     });
 </script>

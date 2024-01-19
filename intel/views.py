@@ -187,7 +187,7 @@ def create_timer(request):
     return render(request, 'intel/create_timer.html', {'form': form})
 
 def parse_paste(paste):
-    [first, _, third] = paste.splitlines()
+    [first, _, third] = [l.strip() for l in filter(lambda x: x != '', paste.splitlines())]
     first = first.split(' - ')
     system = first[0]
     structure_name = ' - '.join(first[1:])

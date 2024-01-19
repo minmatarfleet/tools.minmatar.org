@@ -96,5 +96,9 @@ class StructureTimer(models.Model):
     created_by_character_id = models.BigIntegerField()
     created_by_character_name = models.CharField(max_length=255)
 
+    @property
+    def dotlan_region(self):
+        return self.region.replace(" ", "_")
+
     def __str__(self):
         return f"{self.structure_name} - {self.timer_type} timer - {self.timer.strftime('%Y-%m-%dT%H:%M')}"

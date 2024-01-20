@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from datetime import datetime
+from django.utils import timezone
 from .models import StructureIntel, StructureIntelCampaign, StructureTimer
 from .forms import StructureForm, StructureTimerForm, StructureTimerPasteForm
 from esi.clients import EsiClientProvider
@@ -127,7 +128,7 @@ def create_structure(request):
 
 @login_required
 def list_timers(request):
-    timers = StructureTimer.objects.filter(Q(timer__gte=datetime.now())).order_by('timer').all()
+    timers = StructureTimer.objects.filter(timer__gte=timezone.now()).order_by('timer').all()
     return render(request, 'intel/list_timers.html', {'timers': timers})
 
 def resolve_timer_names(timer):
@@ -186,12 +187,12 @@ def create_timer(request):
     return render(request, 'intel/create_timer.html', {'form': form})
 
 def parse_paste(paste):
-    [first, _, third] = paste.splitlines()
+    [first, _, third] = [l.strip() for l in filter(lambda x: x != '', paste.splitlines())]
     first = first.split(' - ')
     system = first[0]
     structure_name = ' - '.join(first[1:])
     [_, timer] = third.split(' until ')
-    timer = datetime.strptime(timer, '%Y.%m.%d %H:%M:%S')
+    timer = timezone.make_aware(datetime.strptime(timer, '%Y.%m.%d %H:%M:%S'), timezone=timezone.timezone.utc)
     return StructureTimer(
         system = system,
         structure_name = structure_name,

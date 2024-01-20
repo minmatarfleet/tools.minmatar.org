@@ -76,6 +76,7 @@ tzdata==2022.7
 urllib3==1.26.14
 vine==5.0.0
 wcwidth==0.2.6
+whitenoise==6.6.0
 webcolors==1.12
 websockets==10.4
 yarl==1.8.2

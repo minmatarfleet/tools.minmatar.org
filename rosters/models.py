@@ -39,6 +39,9 @@ class EveRosterMember(models.Model):
     name = models.CharField(max_length=255)
     character_id = models.IntegerField()
     monthly_kills = models.IntegerField()
+    quarterly_kills = models.IntegerField()
+    monthly_fleets = models.IntegerField()
+    quarterly_fleets = models.IntegerField()
 
     # autopopulated
     roster = models.ForeignKey(EveRoster, on_delete=models.CASCADE, related_name='members')

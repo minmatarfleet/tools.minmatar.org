@@ -12,6 +12,7 @@
                     <thead>
                         <tr>
                             <th scope="col">Character Name</th>
+                            <th scope="coln">Main Character Name</th>
                             <th scope="col">30 Day Activity (kills)</th>
                             <th scope="col">90 Day Activity (kills)</th>
                             <th scope="col">30 Day Activity (fleets)</th>
@@ -22,6 +23,7 @@
                         {% for roster_member in roster.members.all %}
                         <tr>
                             <td>{{ roster_member.name }}</td>
+                            <td>{{ roster_member.main_character_name }}</td>
                             <td>{{ roster_member.monthly_kills }}</td>
                             <td>{{ roster_member.quarterly_kills }}</td>
                             <td>{{ roster_member.monthly_fleets }}</td>

@@ -37,7 +37,9 @@ class EveRoster(models.Model):
 
 class EveRosterMember(models.Model):
     name = models.CharField(max_length=255)
+    main_character_name = models.CharField(max_length=255, null=True, blank=True)
     character_id = models.IntegerField()
+    main_character_id = models.IntegerField(null=True, blank=True)
     monthly_kills = models.IntegerField()
     quarterly_kills = models.IntegerField()
     monthly_fleets = models.IntegerField()

@@ -19,9 +19,12 @@ def get_main_character_id(character_id):
     with connections["allianceauth"].cursor() as cursor:
         cursor.execute(query, [character_id])
         result = cursor.fetchone()
-        if result[3] != character_id:
-            return result[3]
-        else:
+        try: 
+            if result[3] != character_id:
+                return result[3]
+            else:
+                return None
+        except TypeError:
             return None
 
 

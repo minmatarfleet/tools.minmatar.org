@@ -49,9 +49,9 @@ def create_fleet(request):
     allowed_audiences = (
         ('alliance', 'Alliance'),
     )
-    if character_id_has_roles(eve_character.character_id, ['Skirmish FC', 'FC']):
+    if character_id_has_roles(eve_character.character_id, ['Alliance']):
         allowed_audiences = allowed_audiences + (('militia', 'Militia'),)
-    if character_id_has_roles(eve_character.character_id, ['FC']):
+    if character_id_has_roles(eve_character.character_id, ['Alliance']):
         allowed_audiences = allowed_audiences + (('alliance_high_priority', 'Alliance (alarm clock)'),)
 
     # guard types by roles
@@ -62,7 +62,7 @@ def create_fleet(request):
         ('battlefield', 'Battlefield'),
     )
 
-    if character_id_has_roles(eve_character.character_id, ['FC']):
+    if character_id_has_roles(eve_character.character_id, ['Alliance']):
         allowed_types = allowed_types + (('flash_form', 'Flash Form'), ('stratop', 'Strategic'))
     
     if request.method == 'POST':

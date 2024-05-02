@@ -13,7 +13,6 @@
 </nav>
 {% if is_fleet_commander %}
 <div class="container-fluid">
-    <a class="btn btn-warning" href="{% url 'edit_fleet' fleet.pk %}">Edit Fleet</a>
     <a class="btn btn-danger" href="{% url 'delete_fleet' fleet.pk %}">Delete Fleet</a>
     {% if fleet.invalid_for_preping_reason %}
     <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{fleet.invalid_for_preping_reason}}">

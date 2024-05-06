@@ -22,7 +22,7 @@ def post_markeedragon_code():
 
     message = "**Buying PLEX on MarkeeDragon?**\n"
     message += "Use code **minmatar** at checkout for 3 percent off!\n"
-    message += "https://store.markeedragon.com/index.php?cat=4\n"
+    message += "http://store.markeedragon.com/affiliate.php?id=992&redirect=index.php?cat=4\n"
     message += "*Markeedragon is an authorized third party retailer of PLEX. https://secure.eveonline.com/thirdpartyretailers*\n"
 
     channel.create_message(channel_id='1041930035348652112', content=message)

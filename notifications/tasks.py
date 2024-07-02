@@ -9,7 +9,6 @@ def bump_forum_posts():
 
     message = "**Forum Post Reminder**\n"
     message += "https://forums.eveonline.com/t/fl33t-up-with-purpose-24-7-small-gang-daily-50-brawls/395819?u=bearthatcares\n"
-    message += "https://forums.eveonline.com/t/build-your-future-with-minmatar-industry-mining-hauling/395818?u=bearthatcares\n"
     message += "\n"
     message += "Daily reminder to bump the forum posts. Anyone can do it, but only **once per day**. Please reply with :white_check_mark: or say you got it so that multiple people don't bump."
 

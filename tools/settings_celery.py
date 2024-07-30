@@ -11,9 +11,10 @@ CELERYBEAT_SCHEDULE = {
     },
 }
 
+# 0 15 */2 * *
 CELERYBEAT_SCHEDULE['notify_bump_forum_posts'] = {
     'task': 'notifications.tasks.bump_forum_posts',
-    'schedule': crontab(minute=0, hour=18),
+    'schedule': crontab(minute=0, hour=15, day_of_week='*/2'),
 }
 
 CELERYBEAT_SCHEDULE['post_markeedragon_code'] = {

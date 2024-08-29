@@ -92,7 +92,7 @@ def standard_freight(request):
             )
     else:
         form = StandardFreightCalculatorForm()
-    return render(request, 'logistics/standard_freight.html', context={'form': form, 'result': result, 'current_statistics': get_current_statistics()})
+    return redirect("https://my.minmatar.org/market/freight/standard/")
 
 def wormhole_freight(request):
     result = None
@@ -130,7 +130,7 @@ def wormhole_freight(request):
     else:
         form = WormholeCalculatorForm()
 
-    return render(request, 'logistics/wormhole_freight.html', context={'form': form, 'result': result, 'current_statistics': get_current_statistics()})
+    return redirect("https://my.minmatar.org/market/freight/standard/")
 
 @token_required(scopes=['esi-contracts.read_corporation_contracts.v1'], new=True)
 def add_token(request, token):

@@ -3,6 +3,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout
 from .models import StructureIntel, StructureTimer
 from django import forms
+import re
 
 class StructureForm(forms.Form):
     structure_name = forms.CharField(label='Structure Name', max_length=255)
@@ -24,15 +25,16 @@ class StructureForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
         timer = cleaned_data.get("timer")
-        if len(timer) != 5:
-            raise forms.ValidationError("Timer must be in format MM:SS")
-        if timer[2] != ":":
-            raise forms.ValidationError("Timer must be in format MM:SS")
-        try:
-            int(timer[0:2])
-            int(timer[3:5])
-        except ValueError:
-            raise forms.ValidationError("Timer must be in format MM:SS")
+
+       #check timer is in format xx:xx or xxxx
+        search_results = re.search("\d{2}\:?\d{2}", timer)
+        if search_results is None:
+            raise forms.ValidationError("Timer busy be in format HH:MM or HHMM")
+        
+        timer = re.sub("\:", "", timer)
+
+        cleaned_data["timer"] = timer[0:2] + ":" + timer[2:4]
+        
         return cleaned_data
 
 class StructureTimerForm(forms.Form):
